@@ -160,7 +160,10 @@ nextBtn.addEventListener('click', () => {
         ? selected[0]
         : null;
 
-  answers[q.id] = answer;
+  answers[q.id] = {
+  question_text: q.text,
+  answer
+};
 
   sendEvent('diagnostic_answer', {
     question_id: q.id,
@@ -191,3 +194,4 @@ function finishDiagnostics() {
   `;
 
 }
+
