@@ -9,27 +9,52 @@
 </head>
 <body>
   <div id="app">
-    <select id="language-switcher"></select>
+
+    <!-- Language Switcher -->
+    <label>
+      <span id="lang-label"></span>
+      <select id="language-switcher"></select>
+    </label>
 
     <h1 id="app-title"></h1>
     <p id="app-subtitle"></p>
 
     <button id="start-diagnostics"></button>
 
-    <div id="diagnostics" style="display:none;">
+    <div id="diagnostics" style="display:none; margin-top:24px;">
       <h2 id="question-text"></h2>
       <div id="options"></div>
-      <button id="next-btn"></button>
+      <button id="next-btn" style="margin-top:16px;"></button>
     </div>
+
   </div>
 
-
-  <!-- Base scripts -->
   <script type="module" src="js/config.js"></script>
   <script type="module" src="js/utils.js"></script>
   <script type="module" src="js/tracker.js"></script>
-
-  <!-- Diagnostics -->
+  <script type="module" src="js/i18n.js"></script>
   <script type="module" src="js/diagnostics.js"></script>
+
+  <script type="module">
+    import { loadLanguage, getCurrentLang, t } from './js/i18n.js';
+
+    const switcher = document.getElementById('language-switcher');
+    const label = document.getElementById('lang-label');
+
+    ['ru', 'en'].forEach(lang => {
+      const opt = document.createElement('option');
+      opt.value = lang;
+      opt.textContent = lang.toUpperCase();
+      switcher.appendChild(opt);
+    });
+
+    switcher.value = getCurrentLang();
+    label.textContent = t('app.language');
+
+    switcher.addEventListener('change', async e => {
+      await loadLanguage(e.target.value);
+      location.reload(); // MVP
+    });
+  </script>
 </body>
 </html>
