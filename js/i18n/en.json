@@ -1,0 +1,37 @@
+// js/i18n/en.json
+
+
+{
+  "app": {
+    "title": "Welcome",
+    "subtitle": "Answer a few questions and get an AI-based business diagnostics",
+    "startDiagnostics": "Start diagnostics",
+    "next": "Next",
+    "thankYou": "Thank you!",
+    "diagnosticsComplete": "Diagnostics completed. Analyzing your answers…",
+    "language": "Language"
+  },
+  "questions": {
+    "q1": {
+      "text": "What type of business do you run?",
+      "options": [
+        "Consumer services",
+        "B2B services",
+        "Agency / intermediary",
+        "Online services / EdTech",
+        "Other"
+      ]
+    },
+    "q2": {
+      "text": "Where do your leads mainly come from?",
+      "options": [
+        "Website / landing page",
+        "Messengers",
+        "Social media",
+        "Referrals",
+        "Cold outreach",
+        "Unstable / chaotic"
+      ]
+    }
+  }
+}
