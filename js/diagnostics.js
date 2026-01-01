@@ -164,6 +164,7 @@ nextBtn.addEventListener('click', () => {
 
   sendEvent('diagnostic_answer', {
     question_id: q.id,
+    question_text: q.text,
     answer
   });
 
@@ -188,4 +189,5 @@ function finishDiagnostics() {
     <p><strong>Спасибо!</strong></p>
     <p>Диагностика завершена. Анализируем ответы…</p>
   `;
+
 }
