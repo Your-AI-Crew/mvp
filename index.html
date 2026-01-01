@@ -9,19 +9,20 @@
 </head>
 <body>
   <div id="app">
-    <h1>Добро пожаловать</h1>
-    <p>Ответьте на несколько вопросов и получите первичную AI-диагностику бизнеса.</p>
+    <select id="language-switcher"></select>
 
-    <!-- CTA -->
-    <button id="start-diagnostics">Начать диагностику</button>
+    <h1 id="app-title"></h1>
+    <p id="app-subtitle"></p>
 
-    <!-- Diagnostics UI -->
-    <div id="diagnostics" style="display:none; margin-top:24px;">
+    <button id="start-diagnostics"></button>
+
+    <div id="diagnostics" style="display:none;">
       <h2 id="question-text"></h2>
       <div id="options"></div>
-      <button id="next-btn" style="margin-top:16px;">Далее</button>
+      <button id="next-btn"></button>
     </div>
   </div>
+
 
   <!-- Base scripts -->
   <script type="module" src="js/config.js"></script>
