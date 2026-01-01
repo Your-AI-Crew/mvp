@@ -17,7 +17,11 @@ export function sendEvent(eventType, payload = {}) {
     type: 'application/json'
   });
 
-  navigator.sendBeacon(CONFIG.WEBHOOK_URL, blob);
+  fetch(CONFIG.WEBHOOK_URL, {
+  method: 'POST',
+  mode: 'no-cors',
+  body: JSON.stringify(data)
+});
 
   if (CONFIG.DEBUG) {
     console.log(data);
@@ -31,4 +35,5 @@ if (ctaButton) {
   ctaButton.addEventListener('click', () => {
     sendEvent('cta_click');
   });
+
 }
