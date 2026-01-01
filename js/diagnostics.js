@@ -1,127 +1,44 @@
 // js/diagnostics.js
 
+import { loadLanguage, t, getCurrentLang } from './i18n.js';
 import { sendEvent } from './tracker.js';
 
-/**
- * Диагностические вопросы (данные, не логика)
- */
-const QUESTIONS = [
-  {
-    id: "q1",
-    text: "Какой тип бизнеса вы ведёте?",
-    type: "single",
-    options: [
-      "Услуги для частных клиентов",
-      "Услуги для бизнеса (B2B)",
-      "Агентство / посредник",
-      "Онлайн-сервисы / EdTech",
-      "Другое"
-    ]
-  },
-  {
-    id: "q2",
-    text: "Откуда сейчас приходят основные обращения?",
-    type: "multi",
-    options: [
-      "Сайт / лендинг",
-      "Мессенджеры",
-      "Соцсети",
-      "Рекомендации",
-      "Холодные обращения",
-      "Пока нестабильно / хаотично"
-    ]
-  },
-  {
-    id: "q3",
-    text: "Как сейчас обрабатываются входящие обращения?",
-    type: "single",
-    options: [
-      "Вручную сотрудниками",
-      "Частично автоматизировано",
-      "Чат-бот / ассистент",
-      "Часто теряются / отвечаем не сразу"
-    ]
-  },
-  {
-    id: "q4",
-    text: "Где сотрудники тратят больше всего времени?",
-    type: "multi",
-    options: [
-      "Ответы на однотипные вопросы",
-      "Квалификация лидов",
-      "Документы и расчёты",
-      "Переписка и напоминания",
-      "Контроль задач"
-    ]
-  },
-  {
-    id: "q5",
-    text: "Насколько прозрачна для вас текущая воронка продаж?",
-    type: "single",
-    options: [
-      "Полностью прозрачна",
-      "Частично",
-      "Скорее интуитивно",
-      "Почти не понимаю"
-    ]
-  },
-  {
-    id: "q6",
-    text: "Что беспокоит сильнее всего?",
-    type: "multi",
-    options: [
-      "Потеря клиентов",
-      "Зависимость от сотрудников",
-      "Утечка базы или знаний",
-      "Рост без увеличения штата",
-      "Сложность контроля"
-    ]
-  },
-  {
-    id: "q7",
-    text: "Как вы относитесь к внедрению ИИ сейчас?",
-    type: "single",
-    options: [
-      "Уже внедряем",
-      "Планируем",
-      "Интересно, но есть сомнения",
-      "Пока не готов"
-    ]
-  }
-];
+await loadLanguage(getCurrentLang());
 
-/**
- * Состояние диагностики
- */
-let currentIndex = 0;
-const answers = {};
-
-/**
- * DOM элементы
- */
+// DOM
 const startBtn = document.getElementById('start-diagnostics');
 const diagnosticsEl = document.getElementById('diagnostics');
 const questionTextEl = document.getElementById('question-text');
 const optionsEl = document.getElementById('options');
 const nextBtn = document.getElementById('next-btn');
 
-/**
- * Запуск диагностики
- */
+// Questions order = IDs
+const QUESTION_IDS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7'];
+
+let currentIndex = 0;
+const answers = {};
+
+// INIT UI TEXTS
+document.getElementById('app-title').textContent = t('app.title');
+document.getElementById('app-subtitle').textContent = t('app.subtitle');
+startBtn.textContent = t('app.startDiagnostics');
+nextBtn.textContent = t('app.next');
+
+// START
 startBtn.addEventListener('click', () => {
   startBtn.disabled = true;
   diagnosticsEl.style.display = 'block';
 
-  sendEvent('diagnostic_start');
+  sendEvent('diagnostic_start', {
+    language: getCurrentLang()
+  });
 
   renderQuestion();
 });
 
-/**
- * Рендер текущего вопроса
- */
 function renderQuestion() {
-  const q = QUESTIONS[currentIndex];
+  const id = QUESTION_IDS[currentIndex];
+  const q = t(`questions.${id}`);
 
   questionTextEl.textContent = q.text;
   optionsEl.innerHTML = '';
@@ -133,7 +50,7 @@ function renderQuestion() {
 
     const input = document.createElement('input');
     input.type = q.type === 'multi' ? 'checkbox' : 'radio';
-    input.name = q.id;
+    input.name = id;
     input.value = option;
     input.style.marginRight = '8px';
 
@@ -143,55 +60,47 @@ function renderQuestion() {
   });
 }
 
-/**
- * Переход к следующему вопросу
- */
 nextBtn.addEventListener('click', () => {
-  const q = QUESTIONS[currentIndex];
+  const id = QUESTION_IDS[currentIndex];
+  const q = t(`questions.${id}`);
 
   const selected = Array.from(
-    document.querySelectorAll(`input[name="${q.id}"]:checked`)
+    document.querySelectorAll(`input[name="${id}"]:checked`)
   ).map(i => i.value);
 
-  const answer =
-    q.type === 'multi'
-      ? selected
-      : selected.length > 0
-        ? selected[0]
-        : null;
+  const answer = q.type === 'multi'
+    ? selected
+    : selected[0] || null;
 
-  answers[q.id] = {
-  question_text: q.text,
-  answer
-};
-
-  sendEvent('diagnostic_answer', {
-    question_id: q.id,
+  answers[id] = {
     question_text: q.text,
     answer
+  };
+
+  sendEvent('diagnostic_answer', {
+    question_id: id,
+    question_text: q.text,
+    answer,
+    language: getCurrentLang()
   });
 
   currentIndex++;
 
-  if (currentIndex < QUESTIONS.length) {
+  if (currentIndex < QUESTION_IDS.length) {
     renderQuestion();
   } else {
     finishDiagnostics();
   }
 });
 
-/**
- * Завершение диагностики
- */
 function finishDiagnostics() {
   sendEvent('diagnostic_complete', {
-    answers
+    answers,
+    language: getCurrentLang()
   });
 
   diagnosticsEl.innerHTML = `
-    <p><strong>Спасибо!</strong></p>
-    <p>Диагностика завершена. Анализируем ответы…</p>
+    <p><strong>${t('app.thankYou')}</strong></p>
+    <p>${t('app.diagnosticsComplete')}</p>
   `;
-
 }
-
