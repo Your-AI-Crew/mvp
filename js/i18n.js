@@ -1,5 +1,7 @@
 // js/i18n.js
 
+import { CONFIG } from './config.js';
+
 const LANGUAGE_KEY = 'lang';
 let currentLang = localStorage.getItem(LANGUAGE_KEY) || 'ru';
 let dictionary = {};
@@ -18,4 +20,3 @@ export function t(path) {
 export function getCurrentLang() {
   return currentLang;
 }
-
