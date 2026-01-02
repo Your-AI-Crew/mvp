@@ -6,14 +6,8 @@ import { getCurrentLang } from './i18n.js';
 const userId = getUserId();
 const sessionId = getSessionId();
 
-/**
- * Универсальная отправка события
- * event_type — строка
- * payload — объект (будет сериализован)
- */
 export function sendEvent(eventType, payload = {}) {
   const data = {
-    timestamp: new Date().toISOString(),
     event_type: eventType,
     user_id: userId,
     session_id: sessionId,
@@ -32,14 +26,14 @@ export function sendEvent(eventType, payload = {}) {
       console.log('[event]', data);
     }
   } catch (e) {
-    // fallback на fetch, если вдруг понадобится
+    // Фолбэк (крайний случай)
     fetch(CONFIG.WEBHOOK_URL, {
       method: 'POST',
-      body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
+      mode: 'no-cors',
+      body: JSON.stringify(data)
     });
   }
 }
 
-// базовое событие просмотра страницы
+// базовое событие
 sendEvent('page_view');
