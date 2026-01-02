@@ -26,6 +26,9 @@ nextBtn.textContent = t('app.next');
 
 // START
 startBtn.addEventListener('click', () => {
+  // 🔹 ДОБАВЛЕНО: логирование CTA
+  sendEvent('cta_click');
+
   startBtn.disabled = true;
   diagnosticsEl.style.display = 'block';
 
