@@ -15,23 +15,14 @@ export function sendEvent(eventType, payload = {}) {
     payload
   };
 
-  try {
-    const blob = new Blob([JSON.stringify(data)], {
-      type: 'application/json'
-    });
+  const blob = new Blob([JSON.stringify(data)], {
+    type: 'application/json'
+  });
 
-    navigator.sendBeacon(CONFIG.WEBHOOK_URL, blob);
+  navigator.sendBeacon(CONFIG.WEBHOOK_URL, blob);
 
-    if (CONFIG.DEBUG) {
-      console.log('[event]', data);
-    }
-  } catch (e) {
-    // Фолбэк (крайний случай)
-    fetch(CONFIG.WEBHOOK_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify(data)
-    });
+  if (CONFIG.DEBUG) {
+    console.log('[event]', data);
   }
 }
 
