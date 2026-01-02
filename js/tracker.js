@@ -1,6 +1,7 @@
 // js/tracker.js
 import { CONFIG } from './config.js';
 import { getUserId, getSessionId } from './utils.js';
+import { getCurrentLang } from './i18n.js';
 
 const userId = getUserId();
 const sessionId = getSessionId();
@@ -10,29 +11,20 @@ export function sendEvent(eventType, payload = {}) {
     event_type: eventType,
     user_id: userId,
     session_id: sessionId,
+    language: getCurrentLang(),
     payload
   };
 
-  const blob = new Blob([JSON.stringify(data)], {
-    type: 'application/json'
+  fetch(CONFIG.WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify(data)
   });
 
-  fetch(CONFIG.WEBHOOK_URL, {
-  method: 'POST',
-  mode: 'no-cors',
-  body: JSON.stringify(data)
-});
-
   if (CONFIG.DEBUG) {
-    console.log(data);
+    console.log('[event]', data);
   }
 }
 
+// базовое событие
 sendEvent('page_view');
-
-const ctaButton = document.getElementById('cta-button');
-if (ctaButton) {
-  ctaButton.addEventListener('click', () => {
-    sendEvent('cta_click');
-  });
-}
