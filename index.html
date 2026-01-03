@@ -9,24 +9,41 @@
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
+
   <div id="app">
 
-    <!-- Language Switcher -->
-    <label style="display:block; margin-bottom:12px;">
-      <span id="lang-label"></span>
-      <select id="language-switcher"></select>
-    </label>
 
-    <h1 id="app-title"></h1>
-    <p id="app-subtitle"></p>
+    <!-- MODULE: language -->
+    <section id="language">
+      <label>
+        <span id="lang-label"></span>
+        <select id="language-switcher"></select>
+      </label>
+    </section>
 
-    <button id="start-diagnostics"></button>
 
-    <div id="diagnostics" style="display:none; margin-top:24px;">
-      <h2 id="question-text"></h2>
-      <div id="options"></div>
-      <button id="next-btn" style="margin-top:16px;"></button>
-    </div>
+    <!-- MODULE: diagnostics -->
+    <section id="diagnostics-container">
+      <h1 id="app-title"></h1>
+      <p id="app-subtitle"></p>
+
+      <button id="start-diagnostics"></button>
+
+      <div id="diagnostics" style="display:none; margin-top:24px;">
+        <h2 id="question-text"></h2>
+        <div id="options"></div>
+        <button id="next-btn" style="margin-top:16px;"></button>
+      </div>
+    </section>
+
+
+    <!-- MODULE: result -->
+    <section id="result"></section>
+
+
+    <!-- MODULE: assistant -->
+    <section id="assistant"></section>
+
 
   </div>
 
@@ -37,33 +54,5 @@
   <script type="module" src="js/tracker.js"></script>
   <script type="module" src="js/diagnostics.js"></script>
 
-  <!-- Language switch logic -->
-  <script type="module">
-    import { loadLanguage, getCurrentLang, t } from './js/i18n.js';
-    import { sendEvent } from './js/tracker.js';
-
-    const switcher = document.getElementById('language-switcher');
-    const label = document.getElementById('lang-label');
-
-    ['ru', 'en'].forEach(lang => {
-      const opt = document.createElement('option');
-      opt.value = lang;
-      opt.textContent = lang.toUpperCase();
-      switcher.appendChild(opt);
-    });
-
-    switcher.value = getCurrentLang();
-    label.textContent = t('app.language');
-
-    switcher.addEventListener('change', async e => {
-      const newLang = e.target.value;
-
-      // логируем смену языка как отдельное событие
-      sendEvent('language_change', { language: newLang });
-
-      await loadLanguage(newLang);
-      location.reload(); // MVP-версия
-    });
-  </script>
 </body>
 </html>
