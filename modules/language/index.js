@@ -39,7 +39,7 @@ export function init() {
       to: toLang
     });
 
-    await loadLanguage(toLang);
     location.reload();
   });
+
 }
