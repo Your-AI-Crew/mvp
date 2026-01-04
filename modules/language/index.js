@@ -1,45 +1,40 @@
 //      modules/language/index.js
 
-import { loadLanguage, getCurrentLang, t } from '../../js/i18n.js';
+import { t } from '../../js/i18n.js';
 import { sendEvent } from '../../js/tracker.js';
 import { renderLanguageUI } from './ui.js';
 
 const STORAGE_KEY = 'lang';
 
-function getStoredLang() {
-  return localStorage.getItem(STORAGE_KEY);
-}
-
 function setStoredLang(lang) {
   localStorage.setItem(STORAGE_KEY, lang);
 }
 
-export function init() {
+export function init(context) {
   const container = document.getElementById('language');
   if (!container) return;
 
-  const currentLang = getCurrentLang();
-  renderLanguageUI(container, currentLang, t);
+  const { lang } = context.i18n;
+
+  renderLanguageUI(container, lang, t);
 
   const select = container.querySelector('select');
   const label = container.querySelector('[data-lang-label]');
 
   label.textContent = t('language.label');
 
-  select.addEventListener('change', async (e) => {
-    const fromLang = getCurrentLang();
+  select.addEventListener('change', (e) => {
     const toLang = e.target.value;
 
-    if (fromLang === toLang) return;
+    if (toLang === lang) return;
 
     setStoredLang(toLang);
 
     sendEvent('language_change', {
-      from: fromLang,
+      from: lang,
       to: toLang
     });
 
     location.reload();
   });
-
 }
