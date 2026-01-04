@@ -1,7 +1,7 @@
 {  
   "language": {
     "label": "Language",
-    "ru": "Russian",
+    "ru": "Русский",
     "en": "English"
   },
   "app": {
@@ -90,5 +90,6 @@
     }
   }
 }
+
 
 
