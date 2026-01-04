@@ -1,12 +1,16 @@
-{
+{  
+  "language": {
+    "label": "Language",
+    "ru": "Russian",
+    "en": "English"
+  },
   "app": {
     "title": "Welcome",
     "subtitle": "Answer a few questions and get an AI-based business diagnostics",
     "startDiagnostics": "Start diagnostics",
     "next": "Next",
     "thankYou": "Thank you!",
-    "diagnosticsComplete": "Diagnostics completed. Analyzing your answers…",
-    "language": "Language"
+    "diagnosticsComplete": "Diagnostics completed. Analyzing your answers…"
   },
   "questions": {
     "q1": {
@@ -86,4 +90,5 @@
     }
   }
 }
+
 
