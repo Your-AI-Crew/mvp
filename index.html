@@ -12,49 +12,22 @@
 
   <div id="app">
 
-
     <!-- MODULE: language -->
-    <section id="language">
-      <label>
-        <span id="lang-label"></span>
-        <select id="language-switcher"></select>
-      </label>
-    </section>
-
+    <section id="language"></section>
 
     <!-- MODULE: diagnostics -->
-    <section id="diagnostics-container">
-      <h1 id="app-title"></h1>
-      <p id="app-subtitle"></p>
-
-      <button id="start-diagnostics"></button>
-
-      <div id="diagnostics" style="display:none; margin-top:24px;">
-        <h2 id="question-text"></h2>
-        <div id="options"></div>
-        <button id="next-btn" style="margin-top:16px;"></button>
-      </div>
-    </section>
-
+    <section id="diagnostics"></section>
 
     <!-- MODULE: result -->
     <section id="result"></section>
 
-
     <!-- MODULE: assistant -->
     <section id="assistant"></section>
-
 
   </div>
 
   <!-- Core -->
-  <script type="module" src="js/config.js"></script>
-  <script type="module" src="js/utils.js"></script>
-  <script type="module" src="js/i18n.js"></script>
-  <script type="module" src="js/tracker.js"></script>
-  <script type="module" src="js/diagnostics.js"></script>
   <script type="module" src="js/app.js"></script>
 
 </body>
 </html>
-
