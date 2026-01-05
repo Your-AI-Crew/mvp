@@ -1,19 +1,23 @@
 // modules/diagnostics/index.js
 
 import { sendEvent } from '../../js/tracker.js';
-import { renderStartScreen, renderQuestion } from './ui.js';
+import {
+  renderStartScreen,
+  renderQuestion,
+  renderComplete
+} from './ui.js';
 
 export function init(context) {
   const { diagnostics, ui } = context;
   if (!diagnostics || !ui?.diagnosticsRoot) return;
 
   const container = ui.diagnosticsRoot;
-  const { questions } = diagnostics;
+  const { questions, ui: uiTexts } = diagnostics;
 
   let currentIndex = -1;
   const answers = {};
 
-  renderStartScreen(container, onStart);
+  renderStartScreen(container, uiTexts, onStart);
 
   function onStart() {
     currentIndex = 0;
@@ -27,7 +31,7 @@ export function init(context) {
 
   function renderCurrentQuestion() {
     const question = questions[currentIndex];
-    renderQuestion(container, question, onNext);
+    renderQuestion(container, question, uiTexts, onNext);
   }
 
   function onNext(answer) {
@@ -47,9 +51,17 @@ export function init(context) {
     currentIndex += 1;
 
     if (currentIndex >= questions.length) {
-      sendEvent('diagnostic_complete', {
-        questions_count: questions.length
-      });
+      // ⚠️ важно: сначала UI, потом событие
+      renderComplete(container, uiTexts);
+
+      // микротик, чтобы diagnostic_answer(q7) ушёл раньше
+      setTimeout(() => {
+        sendEvent('diagnostic_complete', {
+          questions_count: questions.length,
+          answers
+        });
+      }, 0);
+
       return;
     }
 
