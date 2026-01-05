@@ -1,15 +1,24 @@
 // modules/diagnostics/ui.js
 
-export function renderStartScreen(container, onStart) {
+export function renderStartScreen(container, uiTexts, onStart) {
   container.innerHTML = '';
 
+  const title = document.createElement('h1');
+  title.textContent = uiTexts.title;
+
+  const subtitle = document.createElement('p');
+  subtitle.textContent = uiTexts.subtitle;
+
   const button = document.createElement('button');
+  button.textContent = uiTexts.startButton;
   button.addEventListener('click', onStart);
 
+  container.appendChild(title);
+  container.appendChild(subtitle);
   container.appendChild(button);
 }
 
-export function renderQuestion(container, question, onNext) {
+export function renderQuestion(container, question, uiTexts, onNext) {
   container.innerHTML = '';
 
   const title = document.createElement('h2');
@@ -35,6 +44,7 @@ export function renderQuestion(container, question, onNext) {
   });
 
   const nextBtn = document.createElement('button');
+  nextBtn.textContent = uiTexts.nextButton;
 
   nextBtn.addEventListener('click', () => {
     let answer;
@@ -54,4 +64,17 @@ export function renderQuestion(container, question, onNext) {
   container.appendChild(title);
   container.appendChild(optionsContainer);
   container.appendChild(nextBtn);
+}
+
+export function renderComplete(container, uiTexts) {
+  container.innerHTML = '';
+
+  const thankYou = document.createElement('p');
+  thankYou.innerHTML = `<strong>${uiTexts.thankYou}</strong>`;
+
+  const text = document.createElement('p');
+  text.textContent = uiTexts.completeText;
+
+  container.appendChild(thankYou);
+  container.appendChild(text);
 }
