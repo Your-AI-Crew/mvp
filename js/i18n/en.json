@@ -1,9 +1,12 @@
-{  
+// js/i18n/en.json
+
+{
   "language": {
     "label": "Language",
     "ru": "Русский",
     "en": "English"
   },
+
   "app": {
     "title": "Welcome",
     "subtitle": "Answer a few questions and get an AI-based business diagnostics",
@@ -12,84 +15,84 @@
     "thankYou": "Thank you!",
     "diagnosticsComplete": "Diagnostics completed. Analyzing your answers…"
   },
-  "questions": {
-    "q1": {
-      "text": "What type of business do you run?",
-      "type": "single",
-      "options": [
-        "Consumer services",
-        "B2B services",
-        "Agency / intermediary",
-        "Online services / EdTech",
-        "Other"
-      ]
-    },
-    "q2": {
-      "text": "Where do your main leads currently come from?",
-      "type": "multi",
-      "options": [
-        "Website / landing page",
-        "Messengers",
-        "Social media",
-        "Referrals",
-        "Cold outreach",
-        "Unstable / chaotic"
-      ]
-    },
-    "q3": {
-      "text": "How are incoming inquiries currently handled?",
-      "type": "single",
-      "options": [
-        "Manually by staff",
-        "Partially automated",
-        "Chatbot / assistant",
-        "Often missed or delayed"
-      ]
-    },
-    "q4": {
-      "text": "Where does your team spend the most time?",
-      "type": "multi",
-      "options": [
-        "Answering repetitive questions",
-        "Lead qualification",
-        "Documents and calculations",
-        "Messaging and follow-ups",
-        "Task control"
-      ]
-    },
-    "q5": {
-      "text": "How transparent is your current sales funnel?",
-      "type": "single",
-      "options": [
-        "Fully transparent",
-        "Partially",
-        "Mostly intuitive",
-        "Almost unclear"
-      ]
-    },
-    "q6": {
-      "text": "What worries you the most?",
-      "type": "multi",
-      "options": [
-        "Losing clients",
-        "Dependence on employees",
-        "Loss of client data or knowledge",
-        "Scaling without increasing staff",
-        "Lack of control"
-      ]
-    },
-    "q7": {
-      "text": "How do you feel about implementing AI right now?",
-      "type": "single",
-      "options": [
-        "Already implementing",
-        "Planning to implement",
-        "Interested but have doubts",
-        "Not ready yet"
-      ]
+
+  "diagnostics": {
+    "questions": {
+      "q1": {
+        "type": "single",
+        "text": "What type of business do you run?",
+        "options": [
+          "Consumer services",
+          "B2B services",
+          "Agency / intermediary",
+          "Online services / EdTech",
+          "Other"
+        ]
+      },
+      "q2": {
+        "type": "multi",
+        "text": "Where do your main leads currently come from?",
+        "options": [
+          "Website / landing page",
+          "Messengers",
+          "Social media",
+          "Referrals",
+          "Cold outreach",
+          "Unstable / chaotic"
+        ]
+      },
+      "q3": {
+        "type": "single",
+        "text": "How are incoming inquiries currently handled?",
+        "options": [
+          "Manually by staff",
+          "Partially automated",
+          "Chatbot / assistant",
+          "Often missed or delayed"
+        ]
+      },
+      "q4": {
+        "type": "multi",
+        "text": "Where does your team spend the most time?",
+        "options": [
+          "Answering repetitive questions",
+          "Lead qualification",
+          "Documents and calculations",
+          "Messaging and follow-ups",
+          "Task control"
+        ]
+      },
+      "q5": {
+        "type": "single",
+        "text": "How transparent is your current sales funnel?",
+        "options": [
+          "Fully transparent",
+          "Partially",
+          "Mostly intuitive",
+          "Almost unclear"
+        ]
+      },
+      "q6": {
+        "type": "multi",
+        "text": "What worries you the most?",
+        "options": [
+          "Losing clients",
+          "Dependence on employees",
+          "Loss of client data or knowledge",
+          "Scaling without increasing staff",
+          "Lack of control"
+        ]
+      },
+      "q7": {
+        "type": "single",
+        "text": "How do you feel about implementing AI right now?",
+        "options": [
+          "Already implementing",
+          "Planning to implement",
+          "Interested but have doubts",
+          "Not ready yet"
+        ]
+      }
     }
   }
 }
-
-
-
