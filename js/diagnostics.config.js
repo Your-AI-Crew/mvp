@@ -15,5 +15,15 @@ export async function loadDiagnosticsConfig() {
     });
   }
 
-  return { questions };
+  return {
+    ui: {
+      title: t('app.title'),
+      subtitle: t('app.subtitle'),
+      startButton: t('app.startDiagnostics'),
+      nextButton: t('app.next'),
+      thankYou: t('app.thankYou'),
+      completeText: t('app.diagnosticsComplete')
+    },
+    questions
+  };
 }
