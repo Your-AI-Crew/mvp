@@ -1,4 +1,4 @@
-// modules/result/index.js — ИСПРАВЛЕННАЯ (FINAL)
+// modules/result/index.js
 
 import { sendEvent } from '../../js/tracker.js';
 import {
@@ -8,16 +8,17 @@ import {
 } from './ui.js';
 
 export function init(context) {
-  const { result, ui } = context;
-  if (!result || !ui?.resultRoot) return;
+  // 🔒 ЖЁСТКИЙ GUARD — без валидного контекста модуль НИЧЕГО не делает
+  if (!context?.result) return;
+  if (!(context.ui?.resultRoot instanceof HTMLElement)) return;
 
-  const container = ui.resultRoot;
+  const { result } = context;
+  const container = context.ui.resultRoot;
 
+  // 🔒 Поддерживаются ТОЛЬКО валидные статусы
   if (result.status === 'processing') {
     renderProcessing(container);
-
     sendEvent('result_view');
-
     return;
   }
 
@@ -27,7 +28,6 @@ export function init(context) {
     });
 
     sendEvent('result_view');
-
     return;
   }
 
@@ -35,5 +35,8 @@ export function init(context) {
     renderError(container, () => {
       sendEvent('result_retry');
     });
+    return;
   }
+
+  // ❌ Любой иной статус — молчаливый выход (по ТЗ)
 }
