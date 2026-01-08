@@ -22,7 +22,7 @@ async function initData() {
     i18n: { lang },
     diagnostics,
     ui: {
-      diagnosticsRoot: document.getElementById('diagnostics')
+      diagnosticsRoot: document.getElementById('diagnostics'),
       resultRoot: document.getElementById('result')
     }
   };
@@ -33,5 +33,6 @@ function initModules(context) {
   initDiagnostics(context);
   initResult(context);
 }
+
 
 
