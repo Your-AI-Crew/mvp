@@ -8,14 +8,12 @@ import {
 } from './ui.js';
 
 export function init(context) {
-  // 🔒 ЖЁСТКИЙ GUARD — без валидного контекста модуль НИЧЕГО не делает
   if (!context?.result) return;
   if (!(context.ui?.resultRoot instanceof HTMLElement)) return;
 
   const { result } = context;
   const container = context.ui.resultRoot;
 
-  // 🔒 Поддерживаются ТОЛЬКО валидные статусы
   if (result.status === 'processing') {
     renderProcessing(container);
     sendEvent('result_view');
@@ -26,7 +24,6 @@ export function init(context) {
     renderReady(container, result.data, () => {
       sendEvent('result_cta_click');
     });
-
     sendEvent('result_view');
     return;
   }
@@ -35,8 +32,5 @@ export function init(context) {
     renderError(container, () => {
       sendEvent('result_retry');
     });
-    return;
   }
-
-  // ❌ Любой иной статус — молчаливый выход (по ТЗ)
 }
