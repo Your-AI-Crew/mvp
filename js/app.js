@@ -1,4 +1,4 @@
-// js/app.js — FINAL, LIFECYCLE-SAFE, UX-CORRECT
+// js/app.js — FINAL, VERIFIED
 
 import { loadLanguage, getCurrentLang } from './i18n.js';
 import { init as initLanguage } from '../modules/language/index.js';
@@ -10,7 +10,7 @@ import { sendEvent } from './tracker.js';
 let context = null;
 
 /**
- * Единственная точка входа приложения
+ * 🔑 Единственная точка входа приложения
  */
 document.addEventListener('DOMContentLoaded', async () => {
   context = await initData();
@@ -18,8 +18,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 /**
- * Data-layer инициализация
- * ❗ result ЗДЕСЬ НЕ СОЗДАЁТСЯ
+ * =========================
+ * 1️⃣ DATA-LAYER INIT
+ * =========================
+ * ❗ result здесь НЕ создаётся
  */
 async function initData() {
   const lang = getCurrentLang();
@@ -38,16 +40,20 @@ async function initData() {
 }
 
 /**
- * Инициализация UI-модулей
+ * =========================
+ * 2️⃣ UI MODULES INIT
+ * =========================
  */
 function initModules(ctx) {
   initLanguage(ctx);
   initDiagnostics(ctx);
-  initResult(ctx); // безопасен: выйдет, если context.result отсутствует
+  initResult(ctx); // safe: ничего не делает без context.result
 }
 
 /**
- * 🔒 ЯВНЫЙ переход в состояние анализа
+ * ==================================================
+ * 🔒 diagnostics → result (processing)
+ * ==================================================
  * Вызывается СТРОГО после diagnostic_complete
  */
 export function startResultProcessing() {
@@ -61,8 +67,13 @@ export function startResultProcessing() {
 }
 
 /**
- * 🔒 ЕДИНСТВЕННАЯ допустимая точка перехода result → ready
- * Вызывается ИЗВНЕ (n8n / callback / polling)
+ * ==================================================
+ * 🔒 result (processing) → result (ready)
+ * ==================================================
+ * Вызывается ИЗВНЕ:
+ * — n8n webhook
+ * — SSE
+ * — polling
  */
 export function updateResult(data) {
   if (!context?.result) return;
@@ -73,6 +84,21 @@ export function updateResult(data) {
   };
 
   sendEvent('result_ready');
+
+  initResult(context);
+}
+
+/**
+ * ==================================================
+ * 🔒 result → error
+ * ==================================================
+ */
+export function setResultError() {
+  if (!context) return;
+
+  context.result = {
+    status: 'error'
+  };
 
   initResult(context);
 }
