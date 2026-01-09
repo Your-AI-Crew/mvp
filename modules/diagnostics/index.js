@@ -52,28 +52,19 @@ export function init(context) {
     currentIndex += 1;
 
     if (currentIndex >= questions.length) {
-      // ⚠️ важно: сначала UI, потом событие
       /**
-       * 1️⃣ Финальный экран диагностики
+       * 1️⃣ Последний экран диагностики
        * (Спасибо + "Анализируем ответы…")
+       * diagnostics ещё ВИДЕН
        */
       renderComplete(container, uiTexts);
 
       /**
-       * 2️⃣ После этого diagnostics-UI больше
-       * НЕ управляет экраном
-       * — result-модуль берёт контроль
-       */
-      container.style.display = 'none';
-
-      /**
-       * 3️⃣ diagnostic_complete
+       * 2️⃣ diagnostic_complete
        * Отправляем асинхронно, чтобы:
-       * - последний diagnostic_answer (q7) гарантированно ушёл первым
-       * - избежать гонок в n8n / analytics
+       * - последний diagnostic_answer ушёл раньше
+       * - n8n не схлопывал события
        */
-
-      // микротик, чтобы diagnostic_answer(q7) ушёл раньше
       setTimeout(() => {
         sendEvent('diagnostic_complete', {
           questions_count: questions.length,
@@ -81,6 +72,11 @@ export function init(context) {
         });
       }, 0);
 
+      /**
+       * ❗ ВАЖНО:
+       * diagnostics НЕ скрывает себя
+       * управление экраном перейдёт к result
+       */
       return;
     }
 
