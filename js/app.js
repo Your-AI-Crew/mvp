@@ -1,4 +1,4 @@
-// js/app.js (orchestrator)
+// js/app.js — FINAL, LIFECYCLE-SAFE, UX-CORRECT
 
 import { loadLanguage, getCurrentLang } from './i18n.js';
 import { init as initLanguage } from '../modules/language/index.js';
@@ -9,27 +9,27 @@ import { sendEvent } from './tracker.js';
 
 let context = null;
 
+/**
+ * Единственная точка входа приложения
+ */
 document.addEventListener('DOMContentLoaded', async () => {
   context = await initData();
   initModules(context);
 });
 
+/**
+ * Data-layer инициализация
+ * ❗ result ЗДЕСЬ НЕ СОЗДАЁТСЯ
+ */
 async function initData() {
   const lang = getCurrentLang();
   await loadLanguage(lang);
 
   const diagnostics = await loadDiagnosticsConfig();
 
-  // 🔒 ЯВНОЕ, ЗАФИКСИРОВАННОЕ начальное состояние result
-
-  const result = {
-    status: 'processing'
-  };
-
   return {
     i18n: { lang },
     diagnostics,
-    result, // ✅ КРИТИЧЕСКИЙ ФИКС
     ui: {
       diagnosticsRoot: document.getElementById('diagnostics'),
       resultRoot: document.getElementById('result')
@@ -37,14 +37,31 @@ async function initData() {
   };
 }
 
+/**
+ * Инициализация UI-модулей
+ */
 function initModules(ctx) {
   initLanguage(ctx);
   initDiagnostics(ctx);
-  initResult(ctx);
+  initResult(ctx); // безопасен: выйдет, если context.result отсутствует
 }
 
 /**
- * ✅ ЕДИНСТВЕННАЯ допустимая точка перехода result → ready
+ * 🔒 ЯВНЫЙ переход в состояние анализа
+ * Вызывается СТРОГО после diagnostic_complete
+ */
+export function startResultProcessing() {
+  if (!context) return;
+
+  context.result = {
+    status: 'processing'
+  };
+
+  initResult(context);
+}
+
+/**
+ * 🔒 ЕДИНСТВЕННАЯ допустимая точка перехода result → ready
  * Вызывается ИЗВНЕ (n8n / callback / polling)
  */
 export function updateResult(data) {
