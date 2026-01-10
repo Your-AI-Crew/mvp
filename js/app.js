@@ -1,4 +1,4 @@
-// js/app.js — FINAL, VERIFIED
+// js/app.js — FINAL, SCREEN-CONTROLLED v2.8
 
 import { loadLanguage, getCurrentLang } from './i18n.js';
 import { init as initLanguage } from '../modules/language/index.js';
@@ -9,20 +9,17 @@ import { sendEvent } from './tracker.js';
 
 let context = null;
 
-/**
- * 🔑 Единственная точка входа приложения
- */
 document.addEventListener('DOMContentLoaded', async () => {
   context = await initData();
   initModules(context);
+
+  // начальное состояние экрана
+  showDiagnostics();
 });
 
-/**
- * =========================
- * 1️⃣ DATA-LAYER INIT
- * =========================
- * ❗ result здесь НЕ создаётся
- */
+/* ======================
+   DATA LAYER
+====================== */
 async function initData() {
   const lang = getCurrentLang();
   await loadLanguage(lang);
@@ -39,42 +36,51 @@ async function initData() {
   };
 }
 
-/**
- * =========================
- * 2️⃣ UI MODULES INIT
- * =========================
- */
+/* ======================
+   UI MODULES
+====================== */
 function initModules(ctx) {
   initLanguage(ctx);
   initDiagnostics(ctx);
-  initResult(ctx); // safe: ничего не делает без context.result
+  initResult(ctx); // safe init
 }
 
-/**
- * ==================================================
- * 🔒 diagnostics → result (processing)
- * ==================================================
- * Вызывается СТРОГО после diagnostic_complete
- */
+/* ======================
+   SCREEN CONTROL
+====================== */
+function showDiagnostics() {
+  if (context?.ui?.diagnosticsRoot) {
+    context.ui.diagnosticsRoot.style.display = '';
+  }
+  if (context?.ui?.resultRoot) {
+    context.ui.resultRoot.style.display = 'none';
+  }
+}
+
+function showResult() {
+  if (context?.ui?.diagnosticsRoot) {
+    context.ui.diagnosticsRoot.style.display = 'none';
+  }
+  if (context?.ui?.resultRoot) {
+    context.ui.resultRoot.style.display = '';
+  }
+}
+
+/* ======================
+   PUBLIC TRANSITIONS
+====================== */
+
+// вызывается после diagnostic_complete (из n8n / вручную)
 export function startResultProcessing() {
   if (!context) return;
 
-  context.result = {
-    status: 'processing'
-  };
+  context.result = { status: 'processing' };
 
+  showResult();
   initResult(context);
 }
 
-/**
- * ==================================================
- * 🔒 result (processing) → result (ready)
- * ==================================================
- * Вызывается ИЗВНЕ:
- * — n8n webhook
- * — SSE
- * — polling
- */
+// вызывается, когда LLM вернул результат
 export function updateResult(data) {
   if (!context?.result) return;
 
@@ -85,20 +91,15 @@ export function updateResult(data) {
 
   sendEvent('result_ready');
 
+  showResult();
   initResult(context);
 }
 
-/**
- * ==================================================
- * 🔒 result → error
- * ==================================================
- */
 export function setResultError() {
   if (!context) return;
 
-  context.result = {
-    status: 'error'
-  };
+  context.result = { status: 'error' };
 
+  showResult();
   initResult(context);
 }
